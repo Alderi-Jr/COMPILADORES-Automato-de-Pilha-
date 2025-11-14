@@ -22,6 +22,28 @@ body{
   color:var(--accent);
 }
 
+.topHeader {
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #4a8dfc, #325bd4);
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.topHeader h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.topHeader span {
+  font-weight: 800;
+  color: #ffd;
+}
+
 /* ------------------- layout dividido ------------------- */
 .layout{
   display:flex;
