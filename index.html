@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Analisador Sintático — TDE</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- ===================== ESQUERDA ===================== -->
+    <div class="left">
+
+      <!-- GRAMÁTICA + FIRST + FOLLOW (compacto) -->
+      <section class="row compactRow">
+
+        <div class="card compactCard">
+          <h3>Gramática</h3>
+<pre class="mono">
+S ::= a A
+A ::= b B d | c C | d D
+B ::= a C | b B
+C ::= c S | ε
+D ::= a b
+</pre>
+        </div>
+
+        <div class="card compactCard">
+          <h3>FIRST</h3>
+<pre class="mono">
+S: { a }
+A: { b, c, d }
+B: { a, b }
+C: { c, ε }
+D: { a }
+</pre>
+
+          <h3>FOLLOW</h3>
+<pre class="mono">
+S: { $, d }
+A: { $, d }
+B: { d }
+C: { $, d }
+D: { $, d }
+</pre>
+        </div>
+
+      </section>
+
+      <!-- =================== TABELA LL(1) =================== -->
+      <section class="card">
+        <h2>Tabela de Parsing</h2>
+
+        <table class="table parse">
+          <thead>
+            <tr>
+              <th>NT</th>
+              <th>a</th>
+              <th>b</th>
+              <th>c</th>
+              <th>d</th>
+              <th>$</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <th>S</th>
+              <td>S→aA</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+
+            <tr>
+              <th>A</th>
+              <td>-</td>
+              <td>A→bBd</td>
+              <td>A→cC</td>
+              <td>A→dD</td>
+              <td>-</td>
+            </tr>
+
+            <tr>
+              <th>B</th>
+              <td>B→aC</td>
+              <td>B→bB</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+
+            <tr>
+              <th>C</th>
+              <td>-</td>
+              <td>-</td>
+              <td>C→cS</td>
+              <td>C→ε</td>
+              <td>C→ε</td>
+            </tr>
+
+            <tr>
+              <th>D</th>
+              <td>D→ab</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </section>
+
+      <!-- =================== GERAÇÃO INTERATIVA =================== -->
+      <section class="card">
+        <h2>Geração Interativa</h2>
+        <p>Clique nas produções para derivar a sentença.</p>
+
+        <table id="derivTable" class="table deriv">
+          <thead>
+            <tr>
+              <th>NT</th><th>a</th><th>b</th><th>c</th><th>d</th><th>$</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <th>S</th>
+              <td data-prod="S→aA">S→aA</td>
+              <td>-</td><td>-</td><td>-</td><td>-</td>
+            </tr>
+
+            <tr>
+              <th>A</th>
+              <td>-</td>
+              <td data-prod="A→bBd">A→bBd</td>
+              <td data-prod="A→cC">A→cC</td>
+              <td data-prod="A→dD">A→dD</td>
+              <td>-</td>
+            </tr>
+
+            <tr>
+              <th>B</th>
+              <td data-prod="B→aC">B→aC</td>
+              <td data-prod="B→bB">B→bB</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+
+            <tr>
+              <th>C</th>
+              <td>-</td><td>-</td>
+              <td data-prod="C→cS">C→cS</td>
+              <td data-prod="C→ε">C→ε</td>
+              <td data-prod="C→ε">C→ε</td>
+            </tr>
+
+            <tr>
+              <th>D</th>
+              <td data-prod="D→ab">D→ab</td>
+              <td>-</td><td>-</td><td>-</td><td>-</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <label for="sentencaMontada">Sentença derivada:</label>
+        <input id="sentencaMontada" readonly>
+
+        <button id="btnSend">Enviar para análise</button>
+        <button id="btnClear">Limpar</button>
+      </section>
+
+    </div>
+
+    <!-- ===================== DIREITA ===================== -->
+    <div class="right card">
+
+      <h2>Testar sentença</h2>
+
+      <label>Entrada:</label>
+      <input id="entradaUsuario" placeholder="ex: abbd">
+
+      <div class="btnrow">
+        <button id="btnAnalyze">Analisar</button>
+        <button id="btnStep">Passo</button>
+        <button id="btnRestart">Reiniciar</button>
+      </div>
+
+      <div id="status" class="status"></div>
+
+      <h3>Execução da Pilha</h3>
+
+      <table id="traceTable" class="table exec">
+        <thead>
+          <tr>
+            <th>Pilha</th>
+            <th>Entrada</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <p>Passos: <span id="passCount">0</span></p>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
