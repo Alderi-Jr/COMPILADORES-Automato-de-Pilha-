@@ -3,7 +3,6 @@
 ![Status](https://img.shields.io/badge/status-completo-brightgreen.svg)
 ![Type](https://img.shields.io/badge/type-acadêmico-blue.svg)
 ![Language](https://img.shields.io/badge/language-JavaScript-yellow.svg)
-![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
 ## 🎯 Descrição do Projeto
 
